@@ -200,18 +200,23 @@
   // ======= 📥 讀取資料（Google 試算表 gviz JSON） =======
   async function fetchFromSheet(){
     if(!SHEET_ID || SHEET_ID === 'YOUR_SHEET_ID') return null;
-    //const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-    //const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
     const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSNEpCquK6h5mnmoZDPiQtCmg_BSzDdo9SwFpL1-ZcaduHDnhRUeUd2YHsGXIYqlmF14-ValKiej2kH/pub?output=csv`;
 
     const res = await fetch(url);
     const text = await res.text();
-    const json = JSON.parse(text.replace(/^.*?\((.*)\);?$/s, '$1'));
-    const cols = json.table.cols.map(c => c.label || c.id);
-    const rows = json.table.rows.map(r => Object.fromEntries(r.c.map((c,i)=>[cols[i], c? (c.f ?? c.v) : ''])));
-    console.log(rows)
+
+    // 解析 CSV
+    const lines = text.trim().split('\n');
+    const cols = lines.shift().split(','); // 第一行是欄位
+    const rows = lines.map(line => {
+      const cells = line.split(',');
+      return Object.fromEntries(cells.map((c,i)=>[cols[i], c]));
+    });
+
+    console.log(rows);
     return rows;
   }
+
 
   // 範例資料（若尚未設定 Sheet，使用此資料測試）
   const SAMPLE = [
