@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>語地 台灣語言聚會分享｜LanguaGIS</title>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+
+  <style>
+    :root{
+      --bg:#0b0b0c; --panel:#111214; --muted:#9aa0a6; --text:#e8eaed; --accent:#8ab4f8; --card:#15171a; --chip:#1d1f24; --ok:#34a853; --warn:#fbbc04; --err:#ea4335;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+    a{color:var(--accent);text-decoration:none}
+    header{position:fixed;inset:0 0 auto 0;display:flex;gap:.75rem;align-items:center;padding:.6rem .9rem;background:linear-gradient(180deg,rgba(11,11,12,.9),rgba(11,11,12,.5) 60%,transparent);backdrop-filter:saturate(140%) blur(6px);z-index:1000}
+    header h1{font-size:1rem;margin:0;font-weight:650;letter-spacing:.2px}
+    header .spacer{flex:1}
+    .btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid #2a2c30;background:var(--chip);color:var(--text);padding:.4rem .7rem;border-radius:999px;cursor:pointer}
+    .btn:hover{border-color:#3a3d43}
+
+    .layout{display:grid;grid-template-columns: 360px 1fr; gap:0; height:100%;}
+    @media (max-width: 1000px){.layout{grid-template-columns:1fr}}
+
+    #sidebar{height:100dvh;padding-top:3.2rem;background:var(--panel);border-right:1px solid #202327;overflow:auto}
+    #map{height:100dvh;width:100%;}
+
+    .section{padding:1rem .9rem;border-bottom:1px solid #202327}
+    .search{display:flex;gap:.6rem}
+    .search input{flex:1;background:#0c0d10;border:1px solid #2b2f35;border-radius:12px;padding:.55rem .7rem;color:var(--text)}
+    .chip{display:inline-flex;gap:.4rem;align-items:center;background:var(--chip);border:1px solid #2a2c30;border-radius:999px;padding:.25rem .5rem;font-size:.85rem;margin:.2rem .2rem 0 0}
+    .toggle{display:inline-flex;align-items:center;gap:.35rem;cursor:pointer}
+    .toggle input{accent-color:var(--accent)}
+
+    .list{display:grid;gap:.6rem;padding:.8rem .9rem}
+    .card{background:var(--card);border:1px solid #22252b;border-radius:16px;padding:.7rem}
+    .card h3{margin:.2rem 0 .1rem;font-size:1rem}
+    .meta{font-size:.85rem;color:var(--muted)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+    .fav{cursor:pointer;display:inline-flex;align-items:center;gap:.35rem;font-size:.9rem}
+    .fav .ti{font-size:20px}
+
+    /* Popup content */
+    .popup{min-width:260px}
+    .popup .cover{width:100%;border-radius:12px;border:1px solid #2a2c30;cursor:pointer}
+    .info{display:grid;gap:.35rem;margin-top:.5rem}
+    .info .line{display:flex;gap:.5rem;align-items:flex-start}
+    .badge{display:inline-flex;align-items:center;border:1px solid #2a2c30;background:var(--chip);border-radius:8px;padding:.1rem .4rem;font-size:.8rem}
+
+    /* Modal for image */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:2000}
+    .modal.open{display:flex}
+    .modal img{max-width:92vw;max-height:92vh;border-radius:12px;border:1px solid #444}
+
+    footer{position:fixed;bottom:10px;left:10px;z-index:800;background:rgba(17,18,20,.9);border:1px solid #2a2c30;border-radius:999px;padding:.3rem .6rem}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>台灣每週語言交換地圖｜LanguaGIS</h1>
+    <div class="spacer"></div>
+    <button id="btnAdd" class="btn" title="新增活動（Google 表單）">
+      <i class="ti ti-square-rounded-plus"></i><span>新增活動</span>
+    </button>
+    <a id="btnSheet" class="btn" title="資料來源（Google 試算表）" target="_blank" rel="noopener">
+      <i class="ti ti-database"></i><span>資料表</span>
+    </a>
+    <button id="btnLocate" class="btn" title="定位到我">
+      <i class="ti ti-current-location"></i><span>我的位置</span>
+    </button>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="section">
+        <div class="search">
+          <input id="q" type="search" placeholder="搜尋：活動名稱 / 城市 / 語言" />
+          <button class="btn" id="btnClear"><i class="ti ti-x"></i>清除</button>
+        </div>
+        <div style="margin-top:.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <label class="toggle"><input type="checkbox" id="toggleNextWeek" checked> 只看「下週」</label>
+          <span class="badge" id="nextWeekBadge">下週區間載入中…</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <strong>我的最愛</strong>
+          <button class="btn" id="btnShowFav"><i class="ti ti-heart"></i> 僅顯示</button>
+        </div>
+        <div class="list" id="favList" aria-live="polite"></div>
+      </div>
+
+      <div class="section">
+        <strong>所有活動</strong>
+      </div>
+      <div class="list" id="cards" aria-live="polite"></div>
+    </aside>
+
+    <main id="map"></main>
+  </div>
+
+  <div id="imgModal" class="modal" role="dialog" aria-modal="true" aria-label="活動圖片">
+    <img alt="活動圖片" />
+  </div>
+
+  <footer>
+    <small>底圖：OSM / CARTO。資料來源：Google 試算表。</small>
+  </footer>
+
+  <script>
+  // ======= 🔧 設定區（請替換為你的 Google Sheet 與 Google 表單） =======
+  const SHEET_ID = "10BGq1ztEnqUm3D2leTP-dqiPQ7jvfZOs2sfb5bn-tiA";              // 例如：1AbCdEfGh...（位於表單網址中）
+  const SHEET_NAME = "Meetups";                  // 工作表名稱
+  const FORM_URL = "https://docs.google.com/forms/d/YOUR_FORM_ID/viewform"; // 供「新增活動」按鈕開啟
+  // 建議欄位：id,title,lat,lng,date,start_time,end_time,city,address,description,languages,fee,signup_url,organizer,cover_image_url,updated_at
+  // 日期格式建議：YYYY-MM-DD（台灣時間）
+
+  // ======= 🧠 工具函式 =======
+  const $ = (q, el=document) => el.querySelector(q);
+  const $$ = (q, el=document) => [...el.querySelectorAll(q)];
+  const fmtCurrency = (n) => (n==null||n==='')? '—' : (isNaN(+n)? n : `NT$${(+n).toLocaleString('zh-TW')}`);
+  const toDate = (s) => new Date(s + 'T00:00:00+08:00'); // 依台灣時區構造
+
+  function getNextWeekRange(){
+    // 以台北時區為基準，取得「下週一 00:00」到「下週日 23:59:59」
+    const now = new Date();
+    // 換算成台灣時間的現在
+    const tzNow = new Date(now.toLocaleString('en-US', {timeZone:'Asia/Taipei'}));
+    const day = tzNow.getDay(); // 0=Sun..6=Sat
+    const daysUntilNextMon = ((8 - day) % 7) || 7; // 至少 +1 天
+    const nextMon = new Date(tzNow); nextMon.setDate(tzNow.getDate() + daysUntilNextMon); nextMon.setHours(0,0,0,0);
+    const nextSun = new Date(nextMon); nextSun.setDate(nextMon.getDate()+6); nextSun.setHours(23,59,59,999);
+    return {start: nextMon, end: nextSun};
+  }
+
+  const nextWeek = getNextWeekRange();
+  const fmtBadge = (d) => d.toLocaleDateString('zh-TW', {month:'2-digit', day:'2-digit'})
+  $('#nextWeekBadge').textContent = `下週：${fmtBadge(nextWeek.start)}–${fmtBadge(nextWeek.end)}`;
+
+  // ======= 🗺️ Leaflet 地圖與底圖 =======
+  const map = L.map('map', { zoomControl: false, minZoom: 5, maxZoom: 19 });
+  L.control.zoom({ position:'bottomright' }).addTo(map);
+
+  const baseLayers = {
+    '🗺️ CARTO Positron（極簡亮）': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }),
+    '🌙 CARTO Dark Matter（極簡暗）': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }),
+    '🧭 OSM Standard': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }),
+    '🆘 OSM Humanitarian': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap & HOT'
+    }),
+  };
+  baseLayers['🗺️ CARTO Positron（極簡亮）'].addTo(map);
+  L.control.layers(baseLayers, {}, { position:'topright', collapsed:true }).addTo(map);
+
+  // 臺灣視圖
+  map.setView([23.7, 121.0], 7);
+
+  // 群聚
+  const cluster = L.markerClusterGroup({ showCoverageOnHover:false, maxClusterRadius: 48 });
+  map.addLayer(cluster);
+
+  // ======= ⭐ 我的最愛（localStorage） =======
+  const FAV_KEY = 'tw-meetup-favs';
+  const getFavs = () => JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+  const setFavs = (ids) => localStorage.setItem(FAV_KEY, JSON.stringify([...new Set(ids)]));
+  const toggleFav = (id) => { const s = new Set(getFavs()); s.has(id) ? s.delete(id) : s.add(id); setFavs([...s]); renderFavList(); updateFavIcons(); };
+  const isFav = (id) => getFavs().includes(id);
+
+  function updateFavIcons(){ $$('.fav[data-id]').forEach(el=>{ const id = el.dataset.id; const icon = el.querySelector('.ti'); icon.className = `ti ${isFav(id)? 'ti-heart-filled' : 'ti-heart'}`; el.style.color = isFav(id)? 'var(--ok)':'inherit'; }); }
+
+  function renderFavList(){
+    const box = $('#favList'); box.innerHTML = '';
+    const favIds = getFavs();
+    const items = records.filter(r => favIds.includes(r.id));
+    if(!items.length){ box.innerHTML = '<div class="meta">尚無最愛，點擊卡片右上角愛心加入。</div>'; return; }
+    for(const r of items){
+      const div = document.createElement('div'); div.className = 'card';
+      div.innerHTML = `<div class="row"><h3>${r.title}</h3><span class="meta">${r.city || ''}・${r.date || ''}</span></div>`;
+      div.addEventListener('click', () => { if(r._marker){ map.setView(r._marker.getLatLng(), 15); r._marker.fire('click'); } });
+      box.appendChild(div);
+    }
+  }
+
+  // ======= 📥 讀取資料（Google 試算表 gviz JSON） =======
+  async function fetchFromSheet(){
+    if(!SHEET_ID || SHEET_ID === 'YOUR_SHEET_ID') return null;
+    //const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    //const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSNEpCquK6h5mnmoZDPiQtCmg_BSzDdo9SwFpL1-ZcaduHDnhRUeUd2YHsGXIYqlmF14-ValKiej2kH/pub?output=csv`;
+
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.replace(/^.*?\((.*)\);?$/s, '$1'));
+    const cols = json.table.cols.map(c => c.label || c.id);
+    const rows = json.table.rows.map(r => Object.fromEntries(r.c.map((c,i)=>[cols[i], c? (c.f ?? c.v) : ''])));
+    console.log(rows)
+    return rows;
+  }
+
+  // 範例資料（若尚未設定 Sheet，使用此資料測試）
+  const SAMPLE = [
+    {id:'demo1', title:'台北英語交流夜', lat:25.042, lng:121.545, date:'2025-09-04', start_time:'19:00', end_time:'21:00', city:'台北', address:'大安區市民大道四段100號', description:'輕鬆小酌、多語言自由交流。', languages:'English / 中文', fee:'200', signup_url:'https://example.com/ticket', organizer:'@taipei_language_club', cover_image_url:'https://images.unsplash.com/photo-1515165562835-c3b8c1a9fc33?q=80&w=1200&auto=format&fit=crop', updated_at:'2025-08-25'},
+    {id:'demo2', title:'高雄西語角', lat:22.626, lng:120.297, date:'2025-09-06', start_time:'15:00', end_time:'17:00', city:'高雄', address:'鹽埕區某咖啡館', description:'拉丁音樂 & 西語聊天。', languages:'Español / 中文', fee:'免費', signup_url:'https://example.com/form', organizer:'@kaohsiung_spanish', cover_image_url:'https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=1200&auto=format&fit=crop', updated_at:'2025-08-26'},
+    {id:'demo3', title:'台中日語讀書會', lat:24.147, lng:120.673, date:'2025-09-02', start_time:'19:30', end_time:'21:00', city:'台中', address:'西區英才路 88 號', description:'N3–N2 閱讀練習與口說。', languages:'日本語 / 中文', fee:'150', signup_url:'https://example.com/jp', organizer:'@taichung_jp', cover_image_url:'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop', updated_at:'2025-08-27'},
+  ];
+
+  let records = [];
+  let markers = [];
+
+  function withinNextWeek(rec){
+    const d = toDate(rec.date);
+    return d >= nextWeek.start && d <= nextWeek.end;
+  }
+
+  function matchQuery(rec, q){
+    if(!q) return true;
+    const bag = `${rec.title} ${rec.city} ${rec.description} ${rec.languages}`.toLowerCase();
+    return bag.includes(q.toLowerCase());
+  }
+
+  function buildPopup(rec){
+    const fee = fmtCurrency(rec.fee);
+    const img = rec.cover_image_url ? `<img class="cover" src="${rec.cover_image_url}" alt="${rec.title}" data-full="${rec.cover_image_url}" />` : '';
+    const signup = rec.signup_url ? `<a href="${rec.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—';
+    const org = rec.organizer ? `<span class="badge">主辦：${rec.organizer}</span>` : '';
+    const time = [rec.date, rec.start_time, rec.end_time].filter(Boolean).join(' ');
+    const html = `
+      <div class="popup">
+        ${img}
+        <div class="info">
+          <div class="line"><strong>${rec.title}</strong></div>
+          <div class="line meta">${time}</div>
+          <div class="line meta">${rec.city || ''} ${rec.address || ''}</div>
+          <div class="line">語言：<span class="badge">${rec.languages || '—'}</span></div>
+          <div class="line">費用：${fee}</div>
+          <div class="line">報名：${signup}</div>
+          <div class="line">${org}</div>
+          <div class="line" style="white-space:pre-wrap">${rec.description || ''}</div>
+          <div class="row">
+            <span class="fav" data-id="${rec.id}"><i class="ti ${isFav(rec.id)?'ti-heart-filled':'ti-heart'}"></i> 加入最愛</span>
+          </div>
+        </div>
+      </div>`;
+    return html;
+  }
+
+  function addMarker(rec){
+    const m = L.marker([+rec.lat, +rec.lng]);
+    m.bindPopup(buildPopup(rec));
+    m.on('popupopen', (e)=>{
+      // 愛心
+      const fav = $('.fav', e.popup.getElement());
+      if(fav){ fav.addEventListener('click', ()=>{ toggleFav(rec.id); e.popup.setContent(buildPopup(rec)); e.popup.update(); }); }
+      // 圖片放大
+      const img = $('.cover', e.popup.getElement());
+      if(img){ img.addEventListener('click', ()=>{ $('#imgModal img').src = img.dataset.full; $('#imgModal').classList.add('open'); }); }
+    });
+    return m;
+  }
+
+  function renderList(){
+    const q = $('#q').value.trim();
+    const onlyNext = $('#toggleNextWeek').checked;
+    const onlyFav = $('#btnShowFav').dataset.active === '1';
+
+    // 清除
+    cluster.clearLayers(); markers = [];
+    $('#cards').innerHTML = '';
+
+    // 篩選
+    const filtered = records.filter(r => (!onlyNext || withinNextWeek(r)) && matchQuery(r, q) && (!onlyFav || isFav(r.id)));
+
+    // 加入標記與卡片
+    for(const r of filtered){
+      const marker = addMarker(r); r._marker = marker; markers.push(marker); cluster.addLayer(marker);
+      const card = document.createElement('div'); card.className = 'card';
+      card.innerHTML = `
+        <div class="row">
+          <h3>${r.title}</h3>
+          <span class="fav" data-id="${r.id}"><i class="ti ${isFav(r.id)?'ti-heart-filled':'ti-heart'}"></i></span>
+        </div>
+        <div class="meta">${r.city || ''}・${r.date || ''} ${r.start_time? '• '+r.start_time: ''}</div>
+        <div class="meta">語言：${r.languages || '—'}｜費用：${fmtCurrency(r.fee)}</div>
+      `;
+      card.addEventListener('click', ()=>{ map.setView([+r.lat, +r.lng], 15); marker.openPopup(); });
+      // 卡片愛心不觸發 map focus
+      const heart = card.querySelector('.fav'); heart.addEventListener('click', (ev)=>{ ev.stopPropagation(); toggleFav(r.id); renderList(); });
+      $('#cards').appendChild(card);
+    }
+
+    updateFavIcons();
+    renderFavList();
+
+    // 自動縮放
+    if(filtered.length){
+      const g = L.featureGroup(filtered.map(r=>r._marker));
+      map.fitBounds(g.getBounds().pad(0.15));
+    }
+  }
+
+  async function init(){
+    // 連結設定
+    $('#btnAdd').addEventListener('click', ()=> window.open(FORM_URL, '_blank'));
+    $('#btnSheet').href = SHEET_ID.startsWith('http')? SHEET_ID : `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
+
+    // 搜尋與篩選事件
+    $('#q').addEventListener('input', renderList);
+    $('#btnClear').addEventListener('click', ()=>{ $('#q').value=''; renderList(); });
+    $('#toggleNextWeek').addEventListener('change', renderList);
+
+    // 僅顯示最愛切換
+    $('#btnShowFav').addEventListener('click', (e)=>{ const on = e.currentTarget.dataset.active === '1'; e.currentTarget.dataset.active = on? '0':'1'; e.currentTarget.classList.toggle('active'); renderList(); });
+
+    // 定位
+    $('#btnLocate').addEventListener('click', ()=>{
+      if(!navigator.geolocation){ alert('此瀏覽器不支援定位'); return; }
+      navigator.geolocation.getCurrentPosition(pos=>{
+        const {latitude, longitude} = pos.coords; map.setView([latitude, longitude], 14);
+        L.circleMarker([latitude, longitude], {radius:6, weight:2, color:'#4caf50'}).addTo(map).bindTooltip('你在這裡');
+      }, err=> alert('定位失敗：'+err.message));
+    });
+
+    try{
+      const rows = await fetchFromSheet();
+      if(rows && rows.length){
+        // 正規化欄位名稱
+        records = rows.map(r=>({
+          id: r.id?.toString() || crypto.randomUUID(),
+          title: r.title || r.名稱 || r.標題 || '未命名活動',
+          lat: r.lat || r.latitude || r.緯度,
+          lng: r.lng || r.longitude || r.經度,
+          date: r.date || r.日期,
+          start_time: r.start_time || r.開始時間 || '',
+          end_time: r.end_time || r.結束時間 || '',
+          city: r.city || r.城市 || '',
+          address: r.address || r.地址 || '',
+          description: r.description || r.介紹 || '',
+          languages: r.languages || r.語言 || '',
+          fee: r.fee || r.費用 || '',
+          signup_url: r.signup_url || r.報名 || r.報名連結 || '',
+          organizer: r.organizer || r.主辦 || r.主辦方 || '',
+          cover_image_url: r.cover_image_url || r.圖片 || r.封面 || '',
+          updated_at: r.updated_at || r.更新時間 || ''
+        })).filter(r=> r.lat && r.lng);
+      }else{
+        records = SAMPLE;
+      }
+    }catch(e){
+      console.warn('讀取試算表失敗，改用範例資料', e);
+      records = SAMPLE;
+    }
+
+    renderList();
+  }
+
+  // 關閉大圖
+  $('#imgModal').addEventListener('click', ()=> $('#imgModal').classList.remove('open'));
+
+  init();
+  </script>
+</body>
+</html>
