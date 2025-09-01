@@ -151,6 +151,7 @@
   const map = L.map('map', { zoomControl: false, minZoom: 5, maxZoom: 19 });
   L.control.zoom({ position:'bottomright' }).addTo(map);
 
+  // Leaflet 原本的底圖
   const baseLayers = {
     '🗺️ CARTO Positron（極簡亮）': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO'
@@ -161,11 +162,18 @@
     '🧭 OSM Standard': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap'
     }),
-    '🆘 OSM Humanitarian': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap & HOT'
+    // ====== 新增 Google Maps style 底圖 ======
+    '🎨 LanguaGIS Classics': L.tileLayer('https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i570286820!3m17!2sen!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjF8cy5lOmwudHxwLnY6b2ZmLHMudDoxOXxzLmU6bC50fHAudjpvZmYscy50OjIwfHMuZTpsLnR8cC52Om9mZixzLnQ6ODF8cy5lOmwudHxwLnY6b2ZmLHMudDo4MnxzLmU6Zy5mfHAudjpvbnxwLmM6I2ZmZTBlZmVmLHMudDo4MnxzLmU6bC50fHAudjpvZmYscy50OjJ8cy5lOmcuZnxwLnY6b258cC5oOiMxOTAwZmZ8cC5jOiNmZmMwZThlOCxzLnQ6MnxzLmU6bC50fHAudjpvZmYscy50OjJ8cy5lOmwuaXxwLnY6b2ZmLHMudDozfHMuZTpnfHAubDoxMDB8cC52OnNpbXBsaWZpZWQscy50OjN8cy5lOmx8cC52Om9mZixzLnQ6NHxzLmU6bC50fHAudjpvZmYscy50OjR8cy5lOmwuaXxwLnY6b2ZmLHMudDo2NXxzLmU6Z3xwLnY6b258cC5sOjcwMCxzLnQ6NnxwLmM6I2ZmN2RjZGNk!4e0', {
+      attribution: '&copy; Google',
+      maxZoom: 20,
+      subdomains: ['mt0','mt1','mt2','mt3'],
     }),
   };
-  baseLayers['🗺️ CARTO Positron（極簡亮）'].addTo(map);
+
+  // 預設底圖
+  baseLayers['🎨 LanguaGIS Classics'].addTo(map);
+
+  // 加入圖層切換控制
   L.control.layers(baseLayers, {}, { position:'topright', collapsed:true }).addTo(map);
 
   // 臺灣視圖
@@ -265,8 +273,15 @@
     return html;
   }
 
+  const gatheringIcon = L.icon({//聚會縮圖圖片
+    iconUrl: 'gatherings.png', // 圖片路徑
+    iconSize: [60, 60],        // 圖標大小，可依需求調整
+    iconAnchor: [16, 32],      // 圖標的「尖端」對應到經緯度的位置
+    popupAnchor: [0, -32]      // popup 相對圖標的位置
+  });
+
   function addMarker(rec){
-    const m = L.marker([+rec.lat, +rec.lng]);
+    const m = L.marker([+rec.lat, +rec.lng], {icon: gatheringIcon});
     m.bindPopup(buildPopup(rec));
     m.on('popupopen', (e)=>{
       // 愛心
