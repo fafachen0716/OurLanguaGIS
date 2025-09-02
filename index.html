@@ -73,6 +73,16 @@
     .btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid #2a2c30;background:var(--chip);color:var(--text);padding:.4rem .7rem;border-radius:999px;cursor:pointer}
     .btn:hover{border-color:#3a3d43}
 
+    #btnShowFav.active {
+      background-color: #fdd;   /* 背景顏色變淡紅 */
+      color: #c00;              /* 文字變紅 */
+      border: 1px solid #c00;   /* 邊框紅色 */
+    }
+
+    #btnShowFav.active i {
+      color: #c00;              /* icon 顏色也變紅 */
+    }
+
     .layout{display:grid;grid-template-columns: 360px 1fr; gap:0; height:100%;}
     @media (max-width: 1000px){.layout{grid-template-columns:1fr}}
 
@@ -445,29 +455,37 @@ footer a, footer span {
     return bag.includes(q.toLowerCase());
   }
 
-  function buildPopup(rec){
-    const fee = fmtCurrency(rec.fee);
-    const signup = rec.signup_url ? `<a href="${rec.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—';
-    const org = rec.organizer ? `<span class="badge">主辦：${rec.organizer}</span>` : '';
-    const time = [rec.date, rec.start_time, rec.end_time].filter(Boolean).join(' ');
-    const html = `
-      <div class="popup">
-        <div class="info">
-          <div class="line"><strong>${rec.title}</strong></div>
-          <div class="line meta">${time}</div>
-          <div class="line meta">${rec.city || ''} ${rec.address || ''}</div>
-          <div class="line">語言：<span class="badge">${rec.languages || '—'}</span></div>
-          <div class="line">費用：${fee}</div>
-          <div class="line">報名：${signup}</div>
-          <div class="line">${org}</div>
-          <div class="line" style="white-space:pre-wrap">${rec.description || ''}</div>
-          <div class="row">
-            <span class="fav" data-id="${rec.id}"><i class="ti ${isFav(rec.id)?'ti-heart-filled':'ti-heart'}"></i> 加入最愛</span>
-          </div>
-        </div>
-      </div>`;
-    return html;
+function buildPopup(rec){
+  const fee = fmtCurrency(rec.fee);
+  const signup = rec.signup_url ? `<a href="${rec.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—';
+  const org = rec.organizer ? `<span class="badge">主辦：${rec.organizer}</span>` : '';
+  const time = [rec.date, rec.start_time, rec.end_time].filter(Boolean).join(' ');
+  
+  // 處理 description，只取前 50 字
+  let desc = rec.description || '';
+  if (desc.length > 50) {
+    desc = desc.substring(0, 50) + '...';
   }
+
+  const html = `
+    <div class="popup">
+      <div class="info">
+        <div class="line"><strong>${rec.title}</strong></div>
+        <div class="line meta">${time}</div>
+        <div class="line meta">${rec.city || ''} ${rec.address || ''}</div>
+        <div class="line">語言：<span class="badge">${rec.languages || '—'}</span></div>
+        <div class="line">費用：${fee}</div>
+        <div class="line">報名：${signup}</div>
+        <div class="line">${org}</div>
+        <div class="line" style="white-space:pre-wrap">${desc}</div>
+        <div class="row">
+          <span class="fav" data-id="${rec.id}"><i class="ti ${isFav(rec.id)?'ti-heart-filled':'ti-heart'}"></i> 加入最愛</span>
+        </div>
+      </div>
+    </div>`;
+  return html;
+}
+
 
   const gatheringIcon = L.icon({//聚會縮圖圖片
     iconUrl: 'gatherings.png', // 圖片路徑
@@ -564,6 +582,12 @@ footer a, footer span {
         const card = document.createElement('div');
         card.className = 'card';
         card.style.backgroundColor = '#2b2d33'; // 不同底色，區分線上活動
+
+          // 處理 description，只取前 50 字
+        let desc = r.description || '';
+        if (desc.length > 50) {
+          desc = desc.substring(0, 50) + '...';
+        }
         card.innerHTML = `
           <div class="row">
             <h3>${r.title}</h3>
@@ -572,7 +596,7 @@ footer a, footer span {
           <div class="meta">${r.city || ''}・${r.date || ''} ${r.start_time? '• '+r.start_time: ''}</div>
           <div class="meta">語言：${r.languages || '—'}｜費用：${fmtCurrency(r.fee)}</div>
           <div class="meta">報名：${r.signup_url? `<a href="${r.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—'}</div>
-          <div class="line" style="white-space:pre-wrap">${r.description || ''}</div>
+          <div class="line" style="white-space:pre-wrap">${desc || ''}</div>
         `;
         card.querySelector('.fav').addEventListener('click', ev=>{ ev.stopPropagation(); toggleFav(r.id); renderList(); });
         $('#cards').appendChild(card);
@@ -670,7 +694,7 @@ footer a, footer span {
           organizer: c["主辦人 organizer"],
           //cover_image_url: c["封面圖片"] || '',
           updated_at: c["更新時間"] || '',
-          languages: c["語言 languages"] || ''
+          languages: c["語言 languages"] || '',
         };
       }).filter(r => r.lat && r.lng);
 
