@@ -23,41 +23,42 @@
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
     a{color:var(--accent);text-decoration:none}
     header {
-      position: fixed;
-      inset: 0 0 auto 0;
-      display: flex;
-      gap: .75rem;
-      align-items: center;
-      padding: .6rem .9rem;
-      background: linear-gradient(180deg, rgb(0, 0, 0) 60%, rgb(0, 0, 0) 30%, transparent);
-      backdrop-filter: saturate(140%) blur(6px);
-      z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    z-index: 1000;
+  }
 
-
-    }
-
-    header h1 {
-      font-size: 1rem;
-      margin: 0;
-      font-weight: 650;
-      letter-spacing: .2px;
-      white-space: nowrap;     /* 標題不換行 */
+      header h1 {
+      font-size: 1rem;   /* 從1rem加大到1.25rem */
+      font-weight: 800;      /* 從650加重到800，顯得更醒目 */
+      color: #0b0b0c;
+      letter-spacing: 0.3px; /* 略增加字距 */
+      white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis; /* 太長顯示省略號 */
+      text-overflow: ellipsis;
     }
 
-    header .spacer {
-      flex: 1;
+    header .toolbar {
+      display: flex;
+      flex-wrap: wrap;      /* 工具列可以換行 */
+      gap: 0.4rem;
     }
 
     header .btn {
       display: flex;
       align-items: center;
-      gap: .35rem;
-      font-size: .875rem;      /* 統一文字大小 */
-      flex-shrink: 0;          /* 避免按鈕被壓縮 */
-      white-space: nowrap;     /* 文字不換行 */
+      gap: 0.35rem;
+      font-size: 0.675rem;
+      flex-shrink: 0;       /* 避免被壓縮 */
+      white-space: nowrap;   /* 文字不換行 */
     }
+
 
     .btn{display:inline-flex;align-items:center;gap:.4rem;border:1px solid #2a2c30;background:var(--chip);color:var(--text);padding:.4rem .7rem;border-radius:999px;cursor:pointer}
     .btn:hover{border-color:#3a3d43}
@@ -77,7 +78,7 @@
 
     #sidebar{
       position: fixed;      /* 浮在地圖上 */
-    top: 3.2rem;          /* 留 header 高度 */
+    top: 6rem;          /* 留 header 高度 */
     left: 0;
     width: 360px;
     height: calc(100% - 3.2rem);
@@ -179,21 +180,22 @@
 <body>
   <header>
     <h1>台灣語言交換地圖｜LanguaGIS</h1>
-    <div class="spacer"></div>
-    <button id="btnAdd" class="btn" title="新增活動（Google 表單）">
-      <i class="ti ti-square-rounded-plus"></i><span>新增活動</span>
-    </button>
-    <a id="btnSheet" class="btn" title="資料來源（Google 試算表）" target="_blank" rel="noopener">
-      <i class="ti ti-database"></i><span>資料表</span>
-    </a>
-    <button id="btnLocate" class="btn" title="定位到我">
-      <i class="ti ti-current-location"></i><span>我的位置</span>
-    </button>
-    <button id="btnToggleSidebar" class="btn" title="收合側邊欄">
-      <i class="ti ti-arrows-left-right"></i><span>切換側邊欄</span>
-    </button>
-    
+    <div class="toolbar">
+      <button id="btnAdd" class="btn" title="新增活動（Google 表單）">
+        <i class="ti ti-square-rounded-plus"></i><span>新增活動</span>
+      </button>
+      <a id="btnSheet" class="btn" title="資料來源（Google 試算表）" target="_blank" rel="noopener">
+        <i class="ti ti-database"></i><span>資料表</span>
+      </a>
+      <button id="btnLocate" class="btn" title="定位到我">
+        <i class="ti ti-current-location"></i><span>我的位置</span>
+      </button>
+      <button id="btnToggleSidebar" class="btn" title="收合側邊欄">
+        <i class="ti ti-arrows-left-right"></i><span>切換側邊欄</span>
+      </button>
+    </div>
   </header>
+  
 
   <div class="layout">
     <aside id="sidebar">
@@ -203,7 +205,7 @@
           <button class="btn" id="btnClear"><i class="ti ti-x"></i>清除</button>
         </div>
         <div style="margin-top:.6rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-          <label class="toggle"><input type="checkbox" id="toggleNextWeek" checked> 只看「下週」</label>
+          <label class="toggle"><input type="checkbox" id="toggleNextWeek"> 只看「下週」</label>
           <span class="badge" id="nextWeekBadge">下週區間載入中…</span>
         </div>
       </div>
@@ -230,20 +232,21 @@
   </div>
   
   <footer>
-    <div style="display:flex;align-items:center;gap: 0.6em;">
-      關注我們
-      <a href="https://www.threads.com/@languagis_tw" target="_blank" rel="noopener" title="Threads" class="social">
-        <i class="ti ti-brand-threads"></i>
+    <div style="display:flex;align-items:center;gap:1em;flex-wrap:wrap;">
+      <a href="https://www.threads.com/@languagis_tw" target="_blank" rel="noopener" title="Threads" class="social" style="display:flex;align-items:center;gap:0.4em;">
+        關注我們 <i class="ti ti-brand-threads"></i>
       </a>
-      <a href="https://www.instagram.com/languagis_tw/" target="_blank" rel="noopener" title="Instagram" class="social">
-        <i class="ti ti-brand-instagram"></i>
+  
+      <a href="https://www.instagram.com/languagis_tw/" target="_blank" rel="noopener" title="Instagram" class="social" style="display:flex;align-items:center;gap:0.4em;">
+      <i class="ti ti-brand-instagram"></i>
       </a>
-      封測抽籤
-      <a href="https://forms.gle/hZa37D65N9mMTZbe7" target="_blank" rel="noopener" title="封測抽籤">
-        <i class="ti ti-ticket"></i>
+  
+      <a href="https://forms.gle/hZa37D65N9mMTZbe7" target="_blank" rel="noopener" title="封測抽籤" class="social" style="display:flex;align-items:center;gap:0.4em;">
+        封測抽籤語言交換配對系統 <i class="ti ti-ticket"></i>
       </a>
     </div>
   </footer>
+  
   
   <script>
   // ======= 🔧 設定區（請替換為你的 Google Sheet 與 Google 表單） =======
