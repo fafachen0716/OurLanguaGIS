@@ -13,6 +13,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <!-- Icons -->
   <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 
   <style>
     :root{
@@ -399,19 +400,18 @@ footer a, footer span {
     if(!SHEET_ID || SHEET_ID === 'YOUR_SHEET_ID') return null;
     const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSNEpCquK6h5mnmoZDPiQtCmg_BSzDdo9SwFpL1-ZcaduHDnhRUeUd2YHsGXIYqlmF14-ValKiej2kH/pub?output=csv`;
 
-    const res = await fetch(url);
-    const text = await res.text();
-
-    // 解析 CSV
-    const lines = text.trim().split('\n');
-    const cols = lines.shift().split(','); // 第一行是欄位
-    const rows = lines.map(line => {
-      const cells = line.split(',');
-      return Object.fromEntries(cells.map((c,i)=>[cols[i], c]));
+    return new Promise((resolve, reject) => {
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          console.log(results.data); // ← 確認欄位有正確解析
+          resolve(results.data);
+        },
+        error: reject
+      });
     });
-
-    console.log(rows);
-    return rows;
   }
 
 
