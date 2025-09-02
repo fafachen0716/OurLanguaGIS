@@ -113,8 +113,57 @@
     .fav .ti{font-size:20px}
 
     /* Popup content */
-    .popup{min-width:260px}
-    .popup .cover{width:100%;border-radius:12px;border:1px solid #2a2c30;cursor:pointer}
+    .popup {
+      min-width: 200px;      /* 最小寬度 */
+      max-width: 90vw;       /* 手機螢幕最大寬度不要超過視窗 */
+    }
+
+    .popup .cover {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #2a2c30;
+      cursor: pointer;
+      object-fit: cover;     /* 避免圖片變形 */
+      max-height: 200px;     /* 手機限制高度 */
+    }
+
+    .info {
+      display: grid;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    .info .line {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      flex-wrap: wrap;       /* 文字太長換行 */
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      color: white;
+      border: 1px solid #2a2c30;
+      background: var(--chip);
+      border-radius: 8px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.8rem;
+      word-break: break-word; /* 避免文字溢出 */
+    }
+
+    /* 手機專用：更小 max-width */
+    @media (max-width: 768px) {
+      .popup {
+        min-width: 180px;
+        max-width: 90vw;
+      }
+      .popup .cover {
+        max-height: 150px;
+      }
+    }
+
+
     .info{display:grid;gap:.35rem;margin-top:.5rem}
     .info .line{display:flex;gap:.5rem;align-items:flex-start}
     .badge{display:inline-flex;align-items:center;color: white;border:1px solid #2a2c30;background:var(--chip);border-radius:8px;padding:.1rem .4rem;font-size:.8rem}
@@ -337,13 +386,11 @@
 
   function buildPopup(rec){
     const fee = fmtCurrency(rec.fee);
-    const img = rec.cover_image_url ? `<img class="cover" src="${rec.cover_image_url}" alt="${rec.title}" data-full="${rec.cover_image_url}" />` : '';
     const signup = rec.signup_url ? `<a href="${rec.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—';
     const org = rec.organizer ? `<span class="badge">主辦：${rec.organizer}</span>` : '';
     const time = [rec.date, rec.start_time, rec.end_time].filter(Boolean).join(' ');
     const html = `
       <div class="popup">
-        ${img}
         <div class="info">
           <div class="line"><strong>${rec.title}</strong></div>
           <div class="line meta">${time}</div>
@@ -370,7 +417,10 @@
 
   function addMarker(rec){
     const m = L.marker([+rec.lat, +rec.lng], {icon: gatheringIcon});
-    m.bindPopup(buildPopup(rec));
+    m.bindPopup(buildPopup(rec), { 
+      maxWidth: window.innerWidth < 768 ? 280 : 400, 
+      closeButton: true 
+    });    
     m.on('popupopen', (e)=>{
       // 愛心
       const fav = $('.fav', e.popup.getElement());
@@ -489,7 +539,7 @@
           fee: c["費用 fee (TWD)"],
           signup_url: c["報名連結 sign up"],
           organizer: c["主辦人 organizer"],
-          cover_image_url: c["封面圖片"] || '',
+          //cover_image_url: c["封面圖片"] || '',
           updated_at: c["更新時間"] || '',
           languages: c["語言 languages"] || ''
         };
