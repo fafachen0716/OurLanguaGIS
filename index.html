@@ -32,17 +32,26 @@
     gap: 0.5rem;
     padding: 0.3rem 0.5rem;
     z-index: 1000;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.4) 0px,
+      rgba(0,0,0,0.4) 20px,
+      rgba(255, 255, 255, 0) 60px
+    );
+
   }
 
       header h1 {
-      font-size: 1rem;   /* 從1rem加大到1.25rem */
-      font-weight: 800;      /* 從650加重到800，顯得更醒目 */
-      color: #0b0b0c;
-      letter-spacing: 0.3px; /* 略增加字距 */
+      font-size: 1rem;   
+      font-weight: 600;      
+      color: #ffffff;
+      letter-spacing: 0.2px; 
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+
     }
+
 
     header .toolbar {
       display: flex;
@@ -77,8 +86,9 @@
 
 
     #sidebar{
-      position: fixed;      /* 浮在地圖上 */
+    position: fixed;      /* 浮在地圖上 */
     top: 6rem;          /* 留 header 高度 */
+    bottom: 3rem;
     left: 0;
     width: 360px;
     height: calc(100% - 3.2rem);
@@ -174,12 +184,50 @@
     .modal.open{display:flex}
     .modal img{max-width:92vw;max-height:92vh;border-radius:12px;border:1px solid #444}
 
-    footer{position:fixed;bottom:10px;left:10px;z-index:1200;background:rgba(17,18,20,.9);border:1px solid #2a2c30;border-radius:999px;padding:.6rem .9rem}
+/* Footer 基本樣式 */
+footer {
+  position: fixed;
+  bottom: 10px;
+  left :10px;
+  z-index: 1200;
+  background: rgba(17,18,20,1);
+  border: 1px solid #2a2c30;
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;      /* 不換行 */
+  overflow-x: auto;       /* 避免超出寬度 */
+}
+
+/* Footer 內連結圖示文字自適應 */
+footer a, footer span {
+  flex-shrink: 0;         /* 不縮小 */
+  white-space: nowrap;    /* 文字不換行 */
+  font-size: 0.85rem;
+}
+
+/* 手機 RWD 調整 */
+@media (max-width: 480px) {
+  footer {
+    padding: 0.4rem 0.6rem;  /* 縮小內邊距 */
+    gap: 0.3rem;             /* 圖示間距縮小 */
+    font-size: 0.75rem;      /* 文字縮小 */
+  }
+
+  footer a i {
+    font-size: 1rem;         /* 圖示縮小 */
+  }
+}
+
   </style>
 </head>
 <body>
   <header>
-    <h1>台灣語言交換地圖｜LanguaGIS</h1>
+    <h1>
+      台灣語言交換地圖｜LanguaGIS
+    </h1>
     <div class="toolbar">
       <button id="btnAdd" class="btn" title="新增活動（Google 表單）">
         <i class="ti ti-square-rounded-plus"></i><span>新增活動</span>
@@ -242,7 +290,7 @@
       </a>
   
       <a href="https://forms.gle/hZa37D65N9mMTZbe7" target="_blank" rel="noopener" title="封測抽籤" class="social" style="display:flex;align-items:center;gap:0.4em;">
-        封測抽籤語言交換配對系統 <i class="ti ti-ticket"></i>
+        封測抽籤 <i class="ti ti-ticket"></i>
       </a>
     </div>
   </footer>
@@ -507,6 +555,18 @@
         L.circleMarker([latitude, longitude], {radius:6, weight:2, color:'#4caf50'}).addTo(map).bindTooltip('你在這裡');
       }, err=> alert('定位失敗：'+err.message));
     });
+
+  // 點擊地圖空白處自動收起側邊欄（手機專用）
+  map.on('click', function(e) {
+    if(window.innerWidth < 768) { // 手機
+      const layout = document.querySelector('.layout');
+      if(!layout.classList.contains('collapsed')) {
+        layout.classList.add('collapsed');
+        setTimeout(() => { map.invalidateSize(); }, 310); // CSS transition 完再更新地圖
+      }
+    }
+  });
+
 
     try{
       const rows = await fetchFromSheet();

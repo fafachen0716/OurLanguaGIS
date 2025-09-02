@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>簽證爭議求助｜在法簽證與居留的真實案例與自救指南</title>
+  <meta name="description" content="在法簽證/居留申請爭議的真實案例、法律資源、手把手申請流程與投書專區。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Tailwind via CDN (適合 GitHub Pages，免建置) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --brand:#1f6feb;
+      --ink:#0f172a; /* slate-900 */
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Noto Sans TC', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+    .prose a { text-decoration: underline; text-underline-offset: 2px; }
+    .chip { @apply inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium; }
+    /* naive dark mode */
+    @media (prefers-color-scheme: dark){
+      body { background:#0b1220; color:#e5e7eb; }
+      header, nav { background: rgba(15,23,42,0.7); backdrop-filter: blur(8px); }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <!-- 頂部導覽 -->
+  <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/70 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="flex h-14 items-center justify-between">
+        <a href="#home" class="flex items-center gap-2 font-bold">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5"><path d="M2.25 12l8.954-8.955a1.125 1.125 0 011.591 0L21.75 12M4.5 9.75v9.375c0 .621.504 1.125 1.125 1.125H9.75v-5.25h4.5v5.25h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21.75h7.5"/></svg>
+          <span>簽證爭議求助</span>
+        </a>
+        <nav class="hidden gap-6 text-sm md:flex">
+          <a class="hover:text-[color:var(--brand)]" href="#cases">案例庫</a>
+          <a class="hover:text-[color:var(--brand)]" href="#guide">手把手流程</a>
+          <a class="hover:text-[color:var(--brand)]" href="#laws">法規與資源</a>
+          <a class="hover:text-[color:var(--brand)]" href="#submit">投書專區</a>
+          <a class="hover:text-[color:var(--brand)]" href="#faq">常見問題</a>
+        </nav>
+        <button id="menuBtn" class="md:hidden inline-flex items-center rounded-xl border px-3 py-1.5 text-sm">選單</button>
+      </div>
+    </div>
+    <div id="mobileNav" class="md:hidden hidden border-t border-slate-200 bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-2 grid grid-cols-2 gap-2 text-sm">
+        <a class="block rounded-lg px-3 py-2 hover:bg-slate-100" href="#cases">案例庫</a>
+        <a class="block rounded-lg px-3 py-2 hover:bg-slate-100" href="#guide">手把手流程</a>
+        <a class="block rounded-lg px-3 py-2 hover:bg-slate-100" href="#laws">法規與資源</a>
+        <a class="block rounded-lg px-3 py-2 hover:bg-slate-100" href="#submit">投書專區</a>
+        <a class="block rounded-lg px-3 py-2 hover:bg-slate-100" href="#faq">常見問題</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 首屏 Hero -->
+  <section id="home" class="relative isolate">
+    <div class="mx-auto max-w-6xl px-4 py-14 md:py-20">
+      <div class="grid items-center gap-8 md:grid-cols-2">
+        <div>
+          <h1 class="text-3xl font-extrabold leading-tight md:text-5xl">
+            在法簽證與居留的<br class="hidden md:block"/>真實案例 × 自救指南
+          </h1>
+          <p class="mt-4 text-slate-600 md:text-lg">
+            匯整真實個案、可用資源與操作檢查清單——幫助你在<strong>送件前</strong>降低風險、在<strong>爭議時</strong>找到救濟。
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#cases" class="inline-flex items-center rounded-xl bg-[color:var(--brand)] px-5 py-2.5 text-white shadow hover:brightness-95">看案例</a>
+            <a href="#submit" class="inline-flex items-center rounded-xl border px-5 py-2.5">分享經驗</a>
+          </div>
+          <p class="mt-6 text-xs text-slate-500">聲明：本網站提供經驗分享與公開資訊彙整，<strong>非法律意見</strong>；若需法律協助請洽合格律師。</p>
+        </div>
+        <div class="relative">
+          <div class="rounded-2xl border bg-white p-5 shadow-sm">
+            <div class="text-sm text-slate-700">
+              <p>快速連結：</p>
+              <ul class="mt-2 grid grid-cols-2 gap-2">
+                <li><a class="block rounded-lg border p-3 hover:bg-slate-50" href="#laws">免費求助名單</a></li>
+                <li><a class="block rounded-lg border p-3 hover:bg-slate-50" href="#guide">送件前檢查表</a></li>
+                <li><a class="block rounded-lg border p-3 hover:bg-slate-50" href="#cases">打官司勝訴案例</a></li>
+                <li><a class="block rounded-lg border p-3 hover:bg-slate-50" href="#faq">常見問答</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 案例庫 -->
+  <section id="cases" class="border-t bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold md:text-3xl">案例庫</h2>
+          <p class="mt-2 text-slate-600">匿名/去識別化呈現，保護當事人；支持關鍵字搜尋與篩選。</p>
+        </div>
+        <div class="flex gap-2">
+          <input id="caseSearch" class="w-56 rounded-xl border px-3 py-2 text-sm" placeholder="搜尋關鍵字、類別、關鍵點…" />
+          <select id="caseFilter" class="rounded-xl border px-3 py-2 text-sm">
+            <option value="">全部類別</option>
+            <option>學生</option>
+            <option>研究/理工</option>
+            <option>工作</option>
+            <option>其他</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="caseList" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+      <template id="caseCardTpl">
+        <article class="group rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="line-clamp-1 text-lg font-semibold"></h3>
+            <span class="chip border-slate-200 text-slate-600"></span>
+          </div>
+          <p class="mt-2 line-clamp-3 text-sm text-slate-600"></p>
+          <div class="mt-3 flex flex-wrap gap-1"></div>
+          <button class="mt-4 w-full rounded-xl bg-slate-900 px-3 py-2 text-sm text-white hover:brightness-110">查看詳情</button>
+        </article>
+      </template>
+
+      <!-- 詳情對話框 -->
+      <dialog id="caseDialog" class="w-[92vw] max-w-3xl rounded-2xl border p-0 shadow-xl">
+        <form method="dialog">
+          <div class="flex items-center justify-between border-b p-4">
+            <h4 id="dlgTitle" class="text-lg font-semibold"></h4>
+            <button class="rounded-lg border px-2 py-1 text-sm">關閉</button>
+          </div>
+        </form>
+        <div class="prose prose-sm max-w-none p-4 md:prose-base">
+          <div id="dlgBody"></div>
+        </div>
+      </dialog>
+    </div>
+  </section>
+
+  <!-- 手把手流程 -->
+  <section id="guide" class="border-t bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-2xl font-bold md:text-3xl">簽證/居留｜手把手流程與送件前檢查</h2>
+      <p class="mt-2 text-slate-600">依身分類型列出常見文件、時間軸、盲點與預防性作法。</p>
+
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <div class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold">送件前：風險預防</h3>
+          <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6">
+            <li>比對<strong>適用身份</strong>與<strong>正確簽證/居留類別</strong>（避免「學歷倒退」或類別不符）。</li>
+            <li>確認<strong>文件對應性</strong>：每份文件都須能說明「與目的的關聯」。例如：音樂院學生學法文→說明<strong>語言能力為修課必要條件</strong>或校方證明。</li>
+            <li>預先寫信/預約<strong>免費協會</strong>（Gisti、La Cimade、Science Accueil、Welcome Desk Paris 等）諮詢是否可<strong>補充文件</strong>或<strong>提供範本</strong>。</li>
+            <li>若逢假期（Vacances）可能聯繫不易，務必<strong>提早</strong>準備替代諮詢窗口。</li>
+            <li>保存<strong>所有往來紀錄</strong>（收據、回覆、掛號、Email、線上回覆截圖）。延誤時做為<strong>證據鏈</strong>。</li>
+            <li>必要時先行諮詢律師，了解<strong>付費</strong>與<strong>Aide juridictionnelle（法律援助）</strong>選項。</li>
+          </ol>
+        </div>
+        <div class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold">常見盲點</h3>
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-6">
+            <li>代表處（駐法/駐台北）多半<strong>無法介入</strong>個案審查。</li>
+            <li>審查<strong>嚴重延誤</strong>（如超過 12–16 個月）時，請即早蒐證並尋求法律意見。</li>
+            <li>文件「相關性」不足是常見拒簽理由——需明確解釋<strong>學習/工作與文件的關連</strong>。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-6 rounded-2xl border bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-semibold">檢查清單（可勾選）</h3>
+        <div class="mt-3 grid gap-3 md:grid-cols-2">
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 已確認正確簽證/居留類別與依據條款。</label>
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 每份文件都有「與目的之關聯」說明或證明。</label>
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 已詢問免費協會能否提供協助或補件建議。</label>
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 了解律師選項：自費與法律援助（AJ）。</label>
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 建立證據鏈：收據、截圖、時間軸皆已保存。</label>
+          <label class="flex items-start gap-3 text-sm"><input type="checkbox" class="mt-1"> 遇長假前已備妥替代諮詢窗口。</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 法規與資源 -->
+  <section id="laws" class="border-t bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-2xl font-bold md:text-3xl">法規與資源</h2>
+      <p class="mt-2 text-slate-600">包含法律條文連結、官方指南、免費協助與求助窗口。</p>
+
+      <div id="resourceWrap" class="mt-6 grid gap-6 md:grid-cols-2">
+        <!-- 動態插入 -->
+      </div>
+
+      <div class="mt-6 rounded-2xl border bg-amber-50 p-4 text-amber-900">
+        <p class="text-sm">提示：法律連結先以 <em>占位符</em> 形式放入。請你將實際條文或官方頁面 URL 填入 <code>data.resources</code>（見本頁原始碼）。GitHub Pages 無伺服器，建議：
+          <br>• 投書以 GitHub Issues、Google 表單或 Formspree 之類服務承接。
+          <br>• 更新內容只要改 <code>data</code> JSON 即可。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 投書專區 -->
+  <section id="submit" class="border-t bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-2xl font-bold md:text-3xl">投書專區（匿名可）</h2>
+      <p class="mt-2 text-slate-600">你或朋友有相似經驗嗎？歡迎匿名分享，協助更多人避開地雷。</p>
+
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <div class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold">方式 A：GitHub Issues（推薦）</h3>
+          <p class="mt-2 text-sm">在專案的 Issues 留言，方便歸檔與後續整理。</p>
+          <a id="issuesLink" target="_blank" class="mt-3 inline-flex items-center rounded-xl bg-[color:var(--brand)] px-4 py-2 text-sm text-white">前往開新 Issue</a>
+          <p class="mt-3 text-xs text-slate-500">請先在 <code>CONFIG.githubRepo</code> 設定你的倉庫，連結才會正確。</p>
+        </div>
+        <div class="rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 class="text-lg font-semibold">方式 B：表單（免登入）</h3>
+          <p class="mt-2 text-sm">使用第三方服務（例如 Formspree 或 Google 表單）。下方提供一個可換端點的靜態表單。</p>
+          <form id="shareForm" class="mt-3 space-y-3" method="POST">
+            <input type="hidden" name="_subject" value="簽證/居留投書" />
+            <label class="block text-sm">暱稱（可留空）<input name="name" class="mt-1 w-full rounded-xl border px-3 py-2" /></label>
+            <label class="block text-sm">Email（可留空）<input name="email" type="email" class="mt-1 w-full rounded-xl border px-3 py-2" /></label>
+            <label class="block text-sm">你的經驗（可匿名）<textarea name="message" rows="6" required class="mt-1 w-full rounded-xl border px-3 py-2" placeholder="請描述身分類別、時間線、遇到的問題、如何解決（是否訴訟/協會/律師）、建議與提醒…"></textarea></label>
+            <button class="w-full rounded-xl bg-slate-900 px-4 py-2 text-white">送出</button>
+            <p class="text-xs text-slate-500">要啟用此表單：在 <code>CONFIG.formEndpoint</code> 填入你的 Formspree 或 Google Apps Script 端點。</p>
+          </form>
+        </div>
+      </div>
+
+      <div class="mt-6 rounded-2xl border bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-semibold">隱私與去識別化建議</h3>
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+          <li>避免公開可識別資訊（全名、學號、居住地址、檔案編號）。</li>
+          <li>時間點可採月份/年分，不必到具體日期。</li>
+          <li>引用文件時留意個資（護照號、簽名、條碼）。必要時打碼再分享。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="border-t bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-2xl font-bold md:text-3xl">常見問題</h2>
+      <div class="mt-4 divide-y rounded-2xl border bg-white">
+        <details class="group p-4 open:bg-slate-50">
+          <summary class="cursor-pointer list-none font-medium">遇到臨時通知/拒簽，只能打官司嗎？</summary>
+          <div class="mt-2 text-sm text-slate-700">在具體情況下，向行政法院提起救濟是可行選項之一；同時建議先諮詢協會與律師，評估是否能先行補件、暫緩執行或採取其他途徑。</div>
+        </details>
+        <details class="group p-4">
+          <summary class="cursor-pointer list-none font-medium">延誤很久（如 16 個月）怎麼辦？</summary>
+          <div class="mt-2 text-sm text-slate-700">建立完整時間線與證據（申請日期、回覆、催辦），詢問協會/律師是否可主張不合理延誤，視情況採取法律行動。</div>
+        </details>
+        <details class="group p-4">
+          <summary class="cursor-pointer list-none font-medium">可以先問能否多交一些文件嗎？</summary>
+          <div class="mt-2 text-sm text-slate-700">可以。事先詢問相關單位與協會，了解是否接受補充文件與範例格式，往往能降低爭議風險。</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 頁尾 -->
+  <footer class="border-t bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 py-10 text-sm text-slate-600">
+      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <p>© <span id="year"></span> 在法簽證爭議求助。內容以繁體中文撰寫；歡迎 PR/投書補充。</p>
+        <div class="flex flex-wrap gap-3">
+          <a class="underline" id="repoLink" target="_blank">GitHub 專案</a>
+          <a class="underline" href="#submit">分享經驗</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== 可編輯設定（放上 GitHub Pages 前請檢視） ======
+    const CONFIG = {
+      githubRepo: 'yourname/visa-help', // 例：'shun-fa/visa-help'，會用來產生 Issues 連結
+      formEndpoint: '', // 例：'https://formspree.io/f/xxxxxxx' 或你的 Google Apps Script 網址
+    };
+
+    // ====== 資料（新增/修改案例與資源，只需要改這裡） ======
+    const data = {
+      cases: [
+        {
+          id: 'case-music-french',
+          title: '案例1：學法文與學音樂沒有關聯？',
+          category: '學生',
+          summary: '就讀音樂院被質疑學法文與主修無關，面臨拒簽/卡關。透過說明語言能力是修課必要條件並補件後，最終在訴訟中獲勝。',
+          tags: ['關聯性證明','學生簽證','補件','勝訴'],
+          timeline: [
+            { date: 'YYYY-MM', text: '提出申請；提交音樂院錄取與語言課程註冊證明。' },
+            { date: 'YYYY-MM', text: '被要求說明學法文與學音樂之關聯。' },
+            { date: 'YYYY-MM', text: '諮詢協會（如 Gisti/La Cimade），準備補件。' },
+            { date: 'YYYY-MM', text: '提起訴訟；最終勝訴。' }
+          ],
+          keypoints: [
+            '以校方文件或課程大綱證明語言能力為修課/實習必要條件。',
+            '準備一頁式「關聯性說明」，逐點對應文件。',
+            '保留所有往來與時序，作為證據鏈。'
+          ],
+          result: '法院採納「學習關聯性」的補充與證據，撤銷不利決定。',
+          docs: ['錄取通知','課程大綱（含語言要求）','語言課註冊證明','補件說明書'],
+          laws: [
+            { name: '（填入實際條文）教育目的居留相關條款', url: '#' },
+            { name: '（填入官方頁面）學生簽證指引', url: '#' }
+          ],
+          links: [
+            { label: '（可放）說明影片 / YouTube', url: '#' }
+          ]
+        },
+        {
+          id: 'case-delay-16m',
+          title: '案例2：審核延誤 16 個月；碩士後就讀等同學士的學程',
+          category: '其他',
+          summary: '申請後長期無結果，高達 16 個月延誤。期間就讀新學程被視為學歷倒退。整合證據時間線，透過法律途徑處理。',
+          tags: ['行政延誤','時間線證據','學歷倒退','勝訴'],
+          timeline: [
+            { date: 'YYYY-MM', text: '提出申請，收到受理證明。' },
+            { date: 'YYYY-MM', text: '多次催辦無回應，保存所有信件與回執。' },
+            { date: 'YYYY-MM', text: '延誤超過一年，諮詢協會與律師。' },
+            { date: 'YYYY-MM', text: '提起訴訟；勝訴。' }
+          ],
+          keypoints: [
+            '把每次聯繫的日期、對象、內容整理成可視化時間軸。',
+            '強調延誤對學業/工作的實際影響與損害。',
+            '必要時聲請暫時措施（酌情）。'
+          ],
+          result: '法院認定延誤不合理並命行政機關處理。',
+          docs: ['受理收據','Email 往來','催辦存證信函','訴訟狀與證據清單'],
+          laws: [
+            { name: '（填入實際條文）行政程序時限/沉默即拒絕 相關規範', url: '#' }
+          ],
+          links: []
+        },
+        {
+          id: 'case-piano-teacher',
+          title: '案例3：工作關聯需釐清',
+          category: '工作',
+          summary: '以工作/藝術活動為目的申請，文件中職務/任用與實際工作內容的關聯不明確。經整理合約條款與工作說明，補強後處理。',
+          tags: ['工作居留','合約內容','職務說明','補件'],
+          timeline: [
+            { date: 'YYYY-MM', text: '提出申請；附上合約與聘書。' },
+            { date: 'YYYY-MM', text: '被要求釐清職務內容與簽證目的之關聯。' },
+            { date: 'YYYY-MM', text: '補充「工作說明書」與聘用機構佐證文件。' },
+            { date: 'YYYY-MM', text: '視情況訴訟/或獲准。' }
+          ],
+          keypoints: [
+            '合約需清楚揭示工作內容、時數、報酬與地點。',
+            '由聘用單位出具工作與簽證目的關聯的正式說明。',
+            '若涉及藝術活動，補充演出/授課計畫與場地證明。'
+          ],
+          result: '補件釐清後，爭議下降；視個案而定。',
+          docs: ['合約/聘書','工作內容說明書','聘用單位函','活動計畫/時程表'],
+          laws: [
+            { name: '（填入實際條文）工作類別居留條款', url: '#' }
+          ],
+          links: []
+        }
+      ],
+      resources: [
+        {
+          type: '法律/官方',
+          items: [
+            { name: '（請填入）外國人入境與居留法典（CESEDA）相關條文', url: '#' },
+            { name: '（請填入）學生簽證官方指引', url: '#' },
+            { name: '（請填入）行政法院訴訟流程說明', url: '#' }
+          ]
+        },
+        {
+          type: '免費協助',
+          items: [
+            { name: 'Gisti', url: '#' },
+            { name: 'La Cimade', url: '#' },
+            { name: 'Science Accueil（理工/研究人員）', url: '#' },
+            { name: 'Welcome Desk Paris（開學季行政協助）', url: '#' }
+          ]
+        },
+        {
+          type: '其他',
+          items: [
+            { name: '（可填）YouTube 說明影片：申請步驟與常見錯誤', url: '#' },
+            { name: '（可填）模板：關聯性說明（學生/工作）', url: '#' }
+          ]
+        }
+      ]
+    };
+
+    // ====== 畫面行為 ======
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+    // 年份 & 連結
+    $('#year').textContent = new Date().getFullYear();
+    $('#repoLink').href = `https://github.com/${CONFIG.githubRepo}`;
+    $('#issuesLink').href = `https://github.com/${CONFIG.githubRepo}/issues/new/choose`;
+
+    // 行動版選單
+    $('#menuBtn').addEventListener('click', ()=>{
+      $('#mobileNav').classList.toggle('hidden');
+    });
+
+    // 投書表單端點
+    const form = $('#shareForm');
+    if(CONFIG.formEndpoint){
+      form.action = CONFIG.formEndpoint;
+    } else {
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        alert('尚未設定表單端點（CONFIG.formEndpoint）。請在原始碼中填入 Formspree 或 Google 表單端點。');
+      });
+    }
+
+    // 資源渲染
+    function renderResources(){
+      const wrap = $('#resourceWrap');
+      wrap.innerHTML = '';
+      data.resources.forEach(group => {
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl border bg-white p-6 shadow-sm';
+        const h = document.createElement('h3');
+        h.className = 'text-lg font-semibold';
+        h.textContent = group.type;
+        const ul = document.createElement('ul');
+        ul.className = 'mt-3 space-y-2';
+        group.items.forEach(it => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a class="underline" target="_blank" href="${it.url}">${it.name}</a>`;
+          ul.appendChild(li);
+        });
+        card.append(h, ul);
+        wrap.appendChild(card);
+      });
+    }
+
+    // 案例渲染
+    function renderCases(){
+      const list = $('#caseList');
+      list.innerHTML = '';
+      const q = $('#caseSearch').value.trim().toLowerCase();
+      const cat = $('#caseFilter').value;
+      const filtered = data.cases.filter(c => {
+        const hay = [c.title, c.category, c.summary, ...(c.tags||[])].join(' ').toLowerCase();
+        const okQ = !q || hay.includes(q);
+        const okCat = !cat || c.category === cat;
+        return okQ && okCat;
+      });
+
+      if(!filtered.length){
+        list.innerHTML = '<p class="text-sm text-slate-500">查無符合條件的案例。</p>';
+        return;
+      }
+
+      const tpl = $('#caseCardTpl');
+      filtered.forEach(c => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('h3').textContent = c.title;
+        node.querySelector('.chip').textContent = c.category;
+        node.querySelector('p').textContent = c.summary;
+        const tagWrap = node.querySelector('.flex.flex-wrap');
+        (c.tags||[]).forEach(t => {
+          const span = document.createElement('span');
+          span.className = 'chip border-slate-200 text-slate-600';
+          span.textContent = t;
+          tagWrap.appendChild(span);
+        });
+        node.querySelector('button').addEventListener('click', ()=> openCase(c));
+        list.appendChild(node);
+      });
+    }
+
+    function openCase(c){
+      $('#dlgTitle').textContent = c.title;
+      const b = $('#dlgBody');
+      b.innerHTML = '';
+
+      // 概覽
+      const overview = document.createElement('div');
+      overview.innerHTML = `
+        <p class="text-sm text-slate-600">類別：<span class="chip border-slate-200">${c.category}</span></p>
+        <p class="mt-2">${c.summary}</p>
+      `;
+
+      // 關鍵重點
+      const kp = document.createElement('div');
+      kp.innerHTML = '<h5 class="mt-4 text-base font-semibold">關鍵重點</h5>';
+      const ul1 = document.createElement('ul'); ul1.className = 'mt-2 list-disc pl-5';
+      (c.keypoints||[]).forEach(x=>{ const li=document.createElement('li'); li.textContent = x; ul1.appendChild(li); });
+      kp.appendChild(ul1);
+
+      // 時間線
+      const tl = document.createElement('div');
+      tl.innerHTML = '<h5 class="mt-4 text-base font-semibold">時間線</h5>';
+      const ul2 = document.createElement('ul'); ul2.className = 'mt-2 space-y-1';
+      (c.timeline||[]).forEach(x=>{ const li=document.createElement('li'); li.innerHTML = `<span class="mr-2 rounded bg-slate-100 px-2 py-0.5 text-xs">${x.date}</span>${x.text}`; ul2.appendChild(li); });
+      tl.appendChild(ul2);
+
+      // 文件
+      const docs = document.createElement('div');
+      docs.innerHTML = '<h5 class="mt-4 text-base font-semibold">文件清單</h5>';
+      const ul3 = document.createElement('ul'); ul3.className = 'mt-2 list-disc pl-5';
+      (c.docs||[]).forEach(x=>{ const li=document.createElement('li'); li.textContent = x; ul3.appendChild(li); });
+      docs.appendChild(ul3);
+
+      // 結果
+      const res = document.createElement('div');
+      res.innerHTML = `<h5 class="mt-4 text-base font-semibold">結果</h5><p class="mt-2">${c.result||'—'}</p>`;
+
+      // 法條/連結
+      const law = document.createElement('div');
+      law.innerHTML = '<h5 class="mt-4 text-base font-semibold">法條與外部連結</h5>';
+      const ul4 = document.createElement('ul'); ul4.className = 'mt-2 space-y-1';
+      (c.laws||[]).forEach(x=>{ const li=document.createElement('li'); li.innerHTML = `<a class="underline" target="_blank" href="${x.url}">${x.name}</a>`; ul4.appendChild(li); });
+      (c.links||[]).forEach(x=>{ const li=document.createElement('li'); li.innerHTML = `<a class="underline" target="_blank" href="${x.url}">${x.label}</a>`; ul4.appendChild(li); });
+      law.appendChild(ul4);
+
+      b.append(overview, kp, tl, docs, res, law);
+
+      const dlg = document.getElementById('caseDialog');
+      if(typeof dlg.showModal === 'function'){ dlg.showModal(); }
+      else { alert('此瀏覽器不支援 dialog，請更新瀏覽器。'); }
+    }
+
+    $('#caseSearch').addEventListener('input', renderCases);
+    $('#caseFilter').addEventListener('change', renderCases);
+
+    // 初始化
+    renderResources();
+    renderCases();
+  </script>
+</body>
+</html>
