@@ -129,6 +129,12 @@
     .list{display:grid;gap:.6rem;padding:.8rem .9rem}
     .card{background:var(--card);border:1px solid #22252b;border-radius:16px;padding:.7rem}
     .card h3{margin:.2rem 0 .1rem;font-size:1rem}
+    .card .desc-scroll {
+      max-height: 100px;   /* 可以調整高度 */
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
     .meta{font-size:.85rem;color:var(--muted)}
     .row{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
     .fav{cursor:pointer;display:inline-flex;align-items:center;gap:.35rem;font-size:.9rem}
@@ -148,6 +154,12 @@
       object-fit: cover;     /* 避免圖片變形 */
       max-height: 200px;     /* 手機限制高度 */
     }
+
+  .popup .desc-scroll {
+    max-height: 100px;   /* 控制高度，可調整 */
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
 
     .info {
       display: grid;
@@ -455,16 +467,16 @@ footer a, footer span {
     return bag.includes(q.toLowerCase());
   }
 
-function buildPopup(rec){
+function buildPopup(rec) {
   const fee = fmtCurrency(rec.fee);
   const signup = rec.signup_url ? `<a href="${rec.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—';
   const org = rec.organizer ? `<span class="badge">主辦：${rec.organizer}</span>` : '';
   const time = [rec.date, rec.start_time, rec.end_time].filter(Boolean).join(' ');
-  
-  // 處理 description，只取前 50 字
+
+  // description 處理，截斷 100 字
   let desc = rec.description || '';
-  if (desc.length > 50) {
-    desc = desc.substring(0, 50) + '...';
+  if (desc.length > 100) {
+    desc = desc.substring(0, 100) + '...';
   }
 
   const html = `
@@ -477,14 +489,17 @@ function buildPopup(rec){
         <div class="line">費用：${fee}</div>
         <div class="line">報名：${signup}</div>
         <div class="line">${org}</div>
-        <div class="line" style="white-space:pre-wrap">${desc}</div>
+        <div class="line desc-scroll">${desc}</div>
         <div class="row">
-          <span class="fav" data-id="${rec.id}"><i class="ti ${isFav(rec.id)?'ti-heart-filled':'ti-heart'}"></i> 加入最愛</span>
+          <span class="fav" data-id="${rec.id}">
+            <i class="ti ${isFav(rec.id) ? 'ti-heart-filled' : 'ti-heart'}"></i> 加入最愛
+          </span>
         </div>
       </div>
     </div>`;
   return html;
 }
+
 
 
   const gatheringIcon = L.icon({//聚會縮圖圖片
@@ -572,6 +587,7 @@ function buildPopup(rec){
 
 
     // ======= 線上活動：單獨列表顯示 =======
+    // ======= 線上活動：單獨列表顯示 =======
     if(online.length){
       const onlineHeader = document.createElement('div');
       onlineHeader.className = 'section';
@@ -583,11 +599,12 @@ function buildPopup(rec){
         card.className = 'card';
         card.style.backgroundColor = '#2b2d33'; // 不同底色，區分線上活動
 
-          // 處理 description，只取前 50 字
+        // 處理 description，只取前 100 字
         let desc = r.description || '';
-        if (desc.length > 50) {
-          desc = desc.substring(0, 50) + '...';
+        if (desc.length > 100) {
+          desc = desc.substring(0, 100) + '...';
         }
+
         card.innerHTML = `
           <div class="row">
             <h3>${r.title}</h3>
@@ -596,12 +613,19 @@ function buildPopup(rec){
           <div class="meta">${r.city || ''}・${r.date || ''} ${r.start_time? '• '+r.start_time: ''}</div>
           <div class="meta">語言：${r.languages || '—'}｜費用：${fmtCurrency(r.fee)}</div>
           <div class="meta">報名：${r.signup_url? `<a href="${r.signup_url}" target="_blank" rel="noopener">前往報名</a>` : '—'}</div>
-          <div class="line" style="white-space:pre-wrap">${desc || ''}</div>
+          <div class="line desc-scroll">${desc || ''}</div>
         `;
-        card.querySelector('.fav').addEventListener('click', ev=>{ ev.stopPropagation(); toggleFav(r.id); renderList(); });
+
+        card.querySelector('.fav').addEventListener('click', ev=>{
+          ev.stopPropagation();
+          toggleFav(r.id);
+          renderList();
+        });
+
         $('#cards').appendChild(card);
       }
     }
+
 
     updateFavIcons();
     renderFavList();
