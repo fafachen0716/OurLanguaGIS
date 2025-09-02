@@ -371,12 +371,12 @@
         city: r["活動城市 city"],
         address: r["活動地址 address"],
         description: r["活動描述 description"],
-        languages: r.語言 || '',
         fee: r["費用 fee (TWD)"],
         signup_url: r["報名連結 sign up"],
         organizer: r.主辦人,
         cover_image_url: r.封面圖片 || '',
-        updated_at: r.更新時間 || ''
+        updated_at: r.更新時間 || '',
+        languages: r["語言 languages"],
       })).filter(r => r.lat && r.lng);
 
       }else{
