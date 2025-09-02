@@ -232,9 +232,10 @@ footer a, footer span {
       <button id="btnAdd" class="btn" title="新增活動（Google 表單）">
         <i class="ti ti-square-rounded-plus"></i><span>新增活動</span>
       </button>
+      <!--
       <a id="btnSheet" class="btn" title="資料來源（Google 試算表）" target="_blank" rel="noopener">
         <i class="ti ti-database"></i><span>資料表</span>
-      </a>
+      </a>-->
       <button id="btnLocate" class="btn" title="定位到我">
         <i class="ti ti-current-location"></i><span>我的位置</span>
       </button>
@@ -368,7 +369,7 @@ footer a, footer span {
   map.setView([23.7, 121.0], 7);
 
   // 群聚
-  const cluster = L.markerClusterGroup({ showCoverageOnHover:false, maxClusterRadius: 48 });
+  const cluster = L.markerClusterGroup({ showCoverageOnHover:false, maxClusterRadius: 30 });
   map.addLayer(cluster);
 
   // ======= ⭐ 我的最愛（localStorage） =======
@@ -526,7 +527,7 @@ footer a, footer span {
   async function init(){
     // 連結設定
     $('#btnAdd').addEventListener('click', ()=> window.open(FORM_URL, '_blank'));
-    $('#btnSheet').href = SHEET_ID.startsWith('http')? SHEET_ID : `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
+    //$('#btnSheet').href = SHEET_ID.startsWith('http')? SHEET_ID : `https://docs.google.com/spreadsheets/d/${SHEET_ID}`;
 
     // 搜尋與篩選事件
     $('#q').addEventListener('input', renderList);
