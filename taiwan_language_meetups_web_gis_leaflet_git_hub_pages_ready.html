@@ -54,7 +54,7 @@
     .popup .cover{width:100%;border-radius:12px;border:1px solid #2a2c30;cursor:pointer}
     .info{display:grid;gap:.35rem;margin-top:.5rem}
     .info .line{display:flex;gap:.5rem;align-items:flex-start}
-    .badge{display:inline-flex;align-items:center;border:1px solid #2a2c30;background:var(--chip);border-radius:8px;padding:.1rem .4rem;font-size:.8rem}
+    .badge{display:inline-flex;align-items:center;color: white;border:1px solid #2a2c30;background:var(--chip);border-radius:8px;padding:.1rem .4rem;font-size:.8rem}
 
     /* Modal for image */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:2000}
@@ -174,7 +174,7 @@
   baseLayers['🎨 LanguaGIS Classics'].addTo(map);
 
   // 加入圖層切換控制
-  L.control.layers(baseLayers, {}, { position:'topright', collapsed:true }).addTo(map);
+   // L.control.layers(baseLayers, {}, { position:'topright', collapsed:true }).addTo(map);
 
   // 臺灣視圖
   map.setView([23.7, 121.0], 7);
@@ -361,23 +361,24 @@
       if(rows && rows.length){
         // 正規化欄位名稱
         records = rows.map(r=>({
-          id: r.id?.toString() || crypto.randomUUID(),
-          title: r.title || r.名稱 || r.標題 || '未命名活動',
-          lat: r.lat || r.latitude || r.緯度,
-          lng: r.lng || r.longitude || r.經度,
-          date: r.date || r.日期,
-          start_time: r.start_time || r.開始時間 || '',
-          end_time: r.end_time || r.結束時間 || '',
-          city: r.city || r.城市 || '',
-          address: r.address || r.地址 || '',
-          description: r.description || r.介紹 || '',
-          languages: r.languages || r.語言 || '',
-          fee: r.fee || r.費用 || '',
-          signup_url: r.signup_url || r.報名 || r.報名連結 || '',
-          organizer: r.organizer || r.主辦 || r.主辦方 || '',
-          cover_image_url: r.cover_image_url || r.圖片 || r.封面 || '',
-          updated_at: r.updated_at || r.更新時間 || ''
-        })).filter(r=> r.lat && r.lng);
+        id: r.id || r.Timestamp || crypto.randomUUID(),
+        title: r.活動標題,
+        lat: r.lat,
+        lng: r.lng,
+        date: r["活動日期 date"],
+        start_time: r["開始時間 from"],
+        end_time: r["結束時間 to"],
+        city: r["活動城市 city"],
+        address: r["活動地址 address"],
+        description: r["活動描述 description"],
+        languages: r.語言 || '',
+        fee: r["費用 fee (TWD)"],
+        signup_url: r["報名連結 sign up"],
+        organizer: r.主辦人,
+        cover_image_url: r.封面圖片 || '',
+        updated_at: r.更新時間 || ''
+      })).filter(r => r.lat && r.lng);
+
       }else{
         records = SAMPLE;
       }
