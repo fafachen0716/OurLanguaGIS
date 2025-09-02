@@ -360,24 +360,41 @@
       const rows = await fetchFromSheet();
       if(rows && rows.length){
         // 正規化欄位名稱
-        records = rows.map(r=>({
-        id: r.id || r.Timestamp || crypto.randomUUID(),
-        title: r.活動標題,
-        lat: r.lat,
-        lng: r.lng,
-        date: r["活動日期 date"],
-        start_time: r["開始時間 from"],
-        end_time: r["結束時間 to"],
-        city: r["活動城市 city"],
-        address: r["活動地址 address"],
-        description: r["活動描述 description"],
-        fee: r["費用 fee (TWD)"],
-        signup_url: r["報名連結 sign up"],
-        organizer: r.主辦人,
-        cover_image_url: r.封面圖片 || '',
-        updated_at: r.更新時間 || '',
-        languages: r["語言 languages"],
-      })).filter(r => r.lat && r.lng);
+        function cleanRow(row) {
+        const clean = {};
+        Object.keys(row).forEach(k => {
+          const newKey = k.replace(/\r/g, "").trim(); // 去掉隱藏字元與多餘空白
+          let value = row[k];
+          if (typeof value === 'string') {
+            value = value.replace(/\r/g, "").trim(); // 清掉值裡的 \r
+          }
+          clean[newKey] = value;
+        });
+        return clean;
+      }
+
+      // 使用範例
+      records = rows.map(r => {
+        const c = cleanRow(r);
+        return {
+          id: c.id || c.Timestamp || crypto.randomUUID(),
+          title: c["活動標題"],
+          lat: c.lat,
+          lng: c.lng,
+          date: c["活動日期 date"],
+          start_time: c["開始時間 from"],
+          end_time: c["結束時間 to"],
+          city: c["活動城市 city"],
+          address: c["活動地址 address"],
+          description: c["活動描述 description"],
+          fee: c["費用 fee (TWD)"],
+          signup_url: c["報名連結 sign up"],
+          organizer: c["主辦人 organizer"],
+          cover_image_url: c["封面圖片"] || '',
+          updated_at: c["更新時間"] || '',
+          languages: c["語言 languages"] || ''
+        };
+      }).filter(r => r.lat && r.lng);
 
       }else{
         records = SAMPLE;
